@@ -10,7 +10,7 @@ public class rsa {
     }
     
     public void encrypt(String message, String fileWithKey){
-        
+
     }
 
     public void decrypt(String encryptedMessage, String fileWithKey){
@@ -47,7 +47,6 @@ public class rsa {
     }
 
     private static String read(String fileName) throws IOException {
-
         return Files.lines(Paths.get(fileName)).reduce("", String::concat);
     }
 
@@ -147,37 +146,37 @@ public class rsa {
     }
 
     public static BigInteger extended_gcd(BigInteger a, BigInteger b) {
-    BigInteger x = BigInteger.ZERO;
-    BigInteger y = BigInteger.ONE;
-    BigInteger lastx = BigInteger.ONE;
-    BigInteger lasty = BigInteger.ZERO; 
+        BigInteger x = BigInteger.ZERO;
+        BigInteger y = BigInteger.ONE;
+        BigInteger lastx = BigInteger.ONE;
+        BigInteger lasty = BigInteger.ZERO; 
 
-    while(b.compareTo(BigInteger.ZERO) != 0){
-      BigInteger q = a.divide(b);
-      BigInteger c = a.mod(b);
-      a = b;
-      b = c;
-      c = x;
-      x = lastx.subtract(q.multiply(x));
-      lastx = c;
-      c = y;
-      y = lasty.subtract(q.multiply(y));
-      lasty = c;
+        while(b.compareTo(BigInteger.ZERO) != 0){
+            BigInteger q = a.divide(b);
+            BigInteger c = a.mod(b);
+            a = b;
+            b = c;
+            c = x;
+            x = lastx.subtract(q.multiply(x));
+            lastx = c;
+            c = y;
+            y = lasty.subtract(q.multiply(y));
+            lasty = c;
+        }
+        return lastx;
     }
-    return lastx;
-  }
     public static BigInteger getPrime() {
         BigInteger maxLimit = new BigInteger("5000000000000");
-       BigInteger minLimit = new BigInteger("25000000000");
-       BigInteger bigInteger = maxLimit.subtract(minLimit);
-       SecureRandom randNum = new SecureRandom();
-       int len = maxLimit.bitLength();
-       BigInteger res = new BigInteger(len, randNum);
-       if (res.compareTo(minLimit) < 0)
-          res = res.add(minLimit);
-       if (res.compareTo(bigInteger) >= 0)
-          res = res.mod(bigInteger).add(minLimit);
-          //System.out.println("The random BigInteger = "+res);
+        BigInteger minLimit = new BigInteger("25000000000");
+        BigInteger bigInteger = maxLimit.subtract(minLimit);
+        SecureRandom randNum = new SecureRandom();
+        int len = maxLimit.bitLength();
+        BigInteger res = new BigInteger(len, randNum);
+        if (res.compareTo(minLimit) < 0)
+            res = res.add(minLimit);
+        if (res.compareTo(bigInteger) >= 0)
+            res = res.mod(bigInteger).add(minLimit);
+            //System.out.println("The random BigInteger = "+res);
         BigInteger bi = BigInteger.probablePrime(2048, randNum);
         if (isPrime(bi) == false)
             getPrime(); 
