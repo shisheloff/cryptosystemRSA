@@ -2,29 +2,27 @@ import java.io.*;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Random;
+import java.security.SecureRandom;
 
-public class test {
-    public static void main(String[] args) throws IOException {
-        KeyGen();
-        signature("/Users/21shish/Desktop/text.txt", "/Users/21shish/Desktop/prkey");
-        System.out.println("SIGNED");
+public class rsa {
+
+    public rsa(){
+    }
+    
+    public void encrypt(String message, String fileWithKey){
         
-        if(verify("/Users/21shish/Desktop/pbkey", "/Users/21shish/Desktop/signature") == true)
-            System.out.println("VERIFIED");
-        else {
-            System.out.println("FAILED");
-        }
     }
 
-    public static void KeyGen() throws IOException {
+    public void decrypt(String encryptedMessage, String fileWithKey){
+
+    }
+
+    public void KeyGen() throws IOException {
         BigInteger firstPrimeNum = getPrime();
         BigInteger secondPrimeNum = getPrime();
         BigInteger n = firstPrimeNum.multiply(secondPrimeNum); // вычисление модуля
-        BigInteger phi = firstPrimeNum.subtract(BigInteger.ONE).multiply(secondPrimeNum.subtract(BigInteger.ONE)); // функция
-                                                                                                                   // Эйлера
+        BigInteger phi = firstPrimeNum.subtract(BigInteger.ONE).multiply(secondPrimeNum.subtract(BigInteger.ONE)); // функция Эйлера
         BigInteger e = BigInteger.valueOf(65537);
-        // BigInteger d = e.modInverse(n);
         BigInteger d = extended_gcd(e, phi);
         while (d.compareTo(BigInteger.ZERO) < 0) {
             d = d.add(phi);
@@ -63,7 +61,7 @@ public class test {
         return new BigInteger[] { new BigInteger(fString), new BigInteger(sString) };
     }
 
-    public static void signature(String fileName, String FileWithKey) throws IOException {
+    public void signature(String fileName, String FileWithKey) throws IOException {
         StringBuilder s = new StringBuilder();
         String data = read(fileName);
         BigInteger[] key = readKeyFile(FileWithKey);
@@ -78,14 +76,13 @@ public class test {
             s.append(hex);
             //System.out.println(hex);
         }
-        //System.out.println(s.toString());
         FileWriter out = new FileWriter("/Users/21shish/Desktop/signature");
         out.write(s.toString());
         out.close();
     }
 
 
-    public static boolean verify( String FileWithKey, String sign) throws IOException, ArrayIndexOutOfBoundsException {
+    public boolean verify( String FileWithKey, String sign) throws IOException, ArrayIndexOutOfBoundsException {
         StringBuilder output = new StringBuilder();
         String signature = read(sign);
         BigInteger[] key = readKeyFile(FileWithKey);
@@ -173,7 +170,7 @@ public class test {
         BigInteger maxLimit = new BigInteger("5000000000000");
        BigInteger minLimit = new BigInteger("25000000000");
        BigInteger bigInteger = maxLimit.subtract(minLimit);
-       Random randNum = new Random();
+       SecureRandom randNum = new SecureRandom();
        int len = maxLimit.bitLength();
        BigInteger res = new BigInteger(len, randNum);
        if (res.compareTo(minLimit) < 0)
@@ -247,4 +244,3 @@ public class test {
         return true;
     }
 }
-
