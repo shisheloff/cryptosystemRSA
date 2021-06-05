@@ -9,19 +9,61 @@ public class rsa {
     public rsa(){
     }
     
-    public void encrypt(String message, String fileWithKey){
-
+    public void encrypt(String str, String fileWithKey) throws IOException{
+        BigInteger[] key = readKeyFile(fileWithKey);
+        System.out.println(key[0] + "\n" + key[1] + "\n");
+        String st = ASCIItoHEX(str);
+        System.out.println(st);
+        BigInteger bg = new BigInteger(st, 16);
+        BigInteger res = bg.modPow(key[0], key[1]);
+        System.out.println(res); 
+        byte[] b = res.toByteArray();
+        String encryptedMessage = new String(b);
+        System.out.println(ASCIItoHEX(encryptedMessage));
+    }
+    
+    public void decrypt(String encryptedMessage, String fileWithKey) throws IOException{
+        BigInteger[] key = readKeyFile(fileWithKey);
+        String st = ASCIItoHEX(encryptedMessage);
+        System.out.println(st);
+        BigInteger bg = new BigInteger(st, 16);
+        BigInteger res = bg.modPow(key[0], key[1]);
+        System.out.println(res);
+        byte[] bytes = res.toByteArray();
+        String decryptedMessage = new String(bytes);
+        System.out.println(ASCIItoHEX(decryptedMessage));
     }
 
-    public void decrypt(String encryptedMessage, String fileWithKey){
+    public static String unHex(String arg) {        
+        String ascii = "";
+        for (int i = 0; i < arg.length(); i += 2) {
+            String part = arg.substring(i, i + 2);
+            char ch = (char)Integer.parseInt(part, 16);
+            ascii = ascii + ch;
+        }
+ 
+        return ascii;
+    }
 
+    public static String ASCIItoHEX(String ascii) {
+       
+        String hex = "";
+        for (int i = 0; i < ascii.length(); i++) {
+            char ch = ascii.charAt(i);
+            int in = (int)ch;
+            String part = Integer.toHexString(in);
+            hex += part;
+        }
+        return hex;
     }
 
     public void KeyGen() throws IOException {
         BigInteger firstPrimeNum = getPrime();
         BigInteger secondPrimeNum = getPrime();
+        System.out.println(firstPrimeNum + "\n" + secondPrimeNum + "\n");
         BigInteger n = firstPrimeNum.multiply(secondPrimeNum); // вычисление модуля
         BigInteger phi = firstPrimeNum.subtract(BigInteger.ONE).multiply(secondPrimeNum.subtract(BigInteger.ONE)); // функция Эйлера
+        System.out.println(phi);
         BigInteger e = BigInteger.valueOf(65537);
         BigInteger d = extended_gcd(e, phi);
         while (d.compareTo(BigInteger.ZERO) < 0) {
@@ -99,7 +141,7 @@ public class rsa {
             //System.out.println(s);
         }
         String s = output.toString();
-        //System.out.println(s);
+        
         return s.equals(signature);
     }
 
@@ -177,7 +219,7 @@ public class rsa {
         if (res.compareTo(bigInteger) >= 0)
             res = res.mod(bigInteger).add(minLimit);
             //System.out.println("The random BigInteger = "+res);
-        BigInteger bi = BigInteger.probablePrime(2048, randNum);
+        BigInteger bi = BigInteger.probablePrime(1024, randNum);
         if (isPrime(bi) == false)
             getPrime(); 
         return bi;
